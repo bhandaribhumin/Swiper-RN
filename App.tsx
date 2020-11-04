@@ -1,21 +1,106 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from "react";
 
+import {
+  Animated,
+  Dimensions,
+  Image,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+} from "react-native";
+
+import Background from "./components/Background";
+import { SLIDER_DATA } from "./slider";
+
+const { width } = Dimensions.get("window");
+
+const SPACING = 5;
+const ITEM_SIZE = Platform.OS === "ios" ? width * 0.72 : width * 0.72;
+const EMPTY_ITEM_SIZE = (width - ITEM_SIZE) / 2;
 export default function App() {
+  const [slider, setSlider] = React.useState<any>([]);
+
+  const scrollX = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    if (slider.length === 0) {
+      setSlider([
+        { key: "empty-left" },
+        ...SLIDER_DATA,
+        { key: "empty-right" },
+      ]);
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Background slider={slider} scrollX={scrollX} ITEM_SIZE={ITEM_SIZE} />
+      <StatusBar hidden />
+      <Animated.FlatList
+        showsHorizontalScrollIndicator={false}
+        data={slider}
+        keyExtractor={(item) => item.key}
+        horizontal
+        bounces={false}
+        decelerationRate={Platform.OS === "ios" ? 0 : 0.98}
+        renderToHardwareTextureAndroid
+        contentContainerStyle={{ alignItems: "flex-end" }}
+        snapToInterval={ITEM_SIZE}
+        snapToAlignment="start"
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: false }
+        )}
+        scrollEventThrottle={16}
+        renderItem={({ item, index }) => {
+          if (!item.poster) {
+            return <View style={{ width: EMPTY_ITEM_SIZE }} />;
+          }
+          return (
+            <View style={{ width: ITEM_SIZE }}>
+              <Animated.View
+                style={{
+                  marginBottom: 70,
+                  marginHorizontal: SPACING,
+                  alignItems: "center",
+                  borderRadius: 5,
+                }}
+              >
+                <Image
+                  source={{ uri: item.poster }}
+                  style={styles.itemsImage}
+                />
+              </Animated.View>
+            </View>
+          );
+        }}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  itemsImage: {
+    width: "100%",
+    height: ITEM_SIZE * 0.5,
+    resizeMode: "stretch",
+    borderRadius: 5,
+    margin: 0,
+    marginBottom: 10,
   },
 });
