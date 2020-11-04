@@ -17,6 +17,24 @@ interface BackgroundProps {
   ITEM_SIZE: number;
 }
 const { width, height } = Dimensions.get("window");
+
+const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  picture: {
+    position: "absolute",
+    width,
+    height,
+    overflow: "hidden",
+  },
+  image: {
+    ...StyleSheet.absoluteFillObject,
+    width,
+    height,
+    position: "absolute",
+  },
+});
 const Background = ({ slider, scrollX, ITEM_SIZE }: BackgroundProps) => {
   //calculate screen size
   //const snapPoints = slider.map((_, i: number) => i * -width);
@@ -25,11 +43,11 @@ const Background = ({ slider, scrollX, ITEM_SIZE }: BackgroundProps) => {
       <Animated.View style={StyleSheet.absoluteFill}>
         <FlatList
           data={slider}
-          keyExtractor={(item) => item.key + "-backdrop"}
+          keyExtractor={(item: Islider) => item.key + "-backdrop"}
           removeClippedSubviews={false}
           contentContainerStyle={{ width, height }}
           bounces={false}
-          renderItem={({ item, index }) => {
+          renderItem={({ item, index }: any) => {
             if (!item.backdrop) {
               return null;
             }
@@ -52,21 +70,4 @@ const Background = ({ slider, scrollX, ITEM_SIZE }: BackgroundProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  picture: {
-    position: "absolute",
-    width,
-    height,
-    overflow: "hidden",
-  },
-  image: {
-    ...StyleSheet.absoluteFillObject,
-    width,
-    height,
-    position: "absolute",
-  },
-});
 export default Background;
