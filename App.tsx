@@ -9,7 +9,8 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Islider, SLIDER_DATA } from "./slider";
+// eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
+import { Islider, SLIDER_DATA } from './slider';
 
 import Background from './components/Background';
 
@@ -72,10 +73,10 @@ export default function App() {
         renderToHardwareTextureAndroid
         contentContainerStyle={{ alignItems: 'flex-end' }}
         snapToInterval={ITEM_SIZE}
-        snapToAlignment='start'
+        snapToAlignment="start"
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
+          { useNativeDriver: false },
         )}
         scrollEventThrottle={16}
         renderItem={({ item }:any) => {
