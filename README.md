@@ -29,7 +29,8 @@ yarn lint
 
 Overlap background interpolate
 ```js
- background.tsx
+ components/Background.tsx
+ 
  <FlatList
           data={slider.reverse()}
           ...
