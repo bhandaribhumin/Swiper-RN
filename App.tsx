@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   Animated,
@@ -8,16 +8,42 @@ import {
   StatusBar,
   StyleSheet,
   View,
-} from "react-native";
+} from 'react-native';
+// eslint-disable-next-line import/no-unresolved, import/no-extraneous-dependencies
+import { Islider, SLIDER_DATA } from './slider';
 
-import Background from "./components/Background";
-import { SLIDER_DATA } from "./slider";
+import Background from './components/Background';
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 
 const SPACING = 5;
-const ITEM_SIZE = Platform.OS === "ios" ? width * 0.72 : width * 0.72;
+const ITEM_SIZE = Platform.OS === 'ios' ? width * 0.72 : width * 0.72;
 const EMPTY_ITEM_SIZE = (width - ITEM_SIZE) / 2;
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  container: {
+    flex: 1,
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  itemsImage: {
+    width: '100%',
+    height: ITEM_SIZE * 0.5,
+    resizeMode: 'stretch',
+    borderRadius: 5,
+    margin: 0,
+    marginBottom: 10,
+  },
+});
 export default function App() {
   const [slider, setSlider] = React.useState<any>([]);
 
@@ -26,9 +52,9 @@ export default function App() {
   React.useEffect(() => {
     if (slider.length === 0) {
       setSlider([
-        { key: "empty-left" },
+        { key: 'empty-left' },
         ...SLIDER_DATA,
-        { key: "empty-right" },
+        { key: 'empty-right' },
       ]);
     }
   }, []);
@@ -40,20 +66,20 @@ export default function App() {
       <Animated.FlatList
         showsHorizontalScrollIndicator={false}
         data={slider}
-        keyExtractor={(item) => item.key}
+        keyExtractor={(item:Islider) => item.key}
         horizontal
         bounces={false}
-        decelerationRate={Platform.OS === "ios" ? 0 : 0.98}
+        decelerationRate={Platform.OS === 'ios' ? 0 : 0.98}
         renderToHardwareTextureAndroid
-        contentContainerStyle={{ alignItems: "flex-end" }}
+        contentContainerStyle={{ alignItems: 'flex-end' }}
         snapToInterval={ITEM_SIZE}
         snapToAlignment="start"
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
+          { useNativeDriver: false },
         )}
         scrollEventThrottle={16}
-        renderItem={({ item, index }) => {
+        renderItem={({ item }:any) => {
           if (!item.poster) {
             return <View style={{ width: EMPTY_ITEM_SIZE }} />;
           }
@@ -63,7 +89,7 @@ export default function App() {
                 style={{
                   marginBottom: 70,
                   marginHorizontal: SPACING,
-                  alignItems: "center",
+                  alignItems: 'center',
                   borderRadius: 5,
                 }}
               >
@@ -79,28 +105,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container: {
-    flex: 1,
-  },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  itemsImage: {
-    width: "100%",
-    height: ITEM_SIZE * 0.5,
-    resizeMode: "stretch",
-    borderRadius: 5,
-    margin: 0,
-    marginBottom: 10,
-  },
-});
